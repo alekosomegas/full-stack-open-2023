@@ -39,8 +39,11 @@ const App = () => {
         <Button name={"neutral"} setter={setNeutral} />
         <Button name={"bad"} setter={setBad} />
       </div>
-
+      {(good || neutral || bad) ? 
       <Statistics good={good} neutral={neutral} bad={bad} />
+      :
+      <p>No feedback given</p>
+    }
     </div>
   )
 }
