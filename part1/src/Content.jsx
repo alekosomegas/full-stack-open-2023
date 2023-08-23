@@ -2,15 +2,15 @@ const Content = (props) => {
   const Part = (props) => {
     return (
       <p>
-        {props.part} {props.exercise}
+        {props.part.name} {props.part.exercises}
       </p>
     );
   };
 
   return (
     <>
-      {props.parts.map((part, i) => {
-        return <Part key={i} part={part} exercise={props.exercises[i]} />;
+      {props.course.parts.map((part, i) => {
+        return <Part key={i} part={part}/>;
       })}
     </>
   );
