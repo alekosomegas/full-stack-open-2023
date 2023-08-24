@@ -11,7 +11,7 @@ const Content = (props) => {
   return (
     <>
       {props.course.parts.map((part, i) => {
-        return <Part key={i} part={part}/>;
+        return <Part key={part.id} part={part}/>;
       })}
     </>
   );
