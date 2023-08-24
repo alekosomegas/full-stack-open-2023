@@ -49,6 +49,14 @@ const App = () => {
     setSearchTerm(term);
   };
 
+  const handleDelete = (person) => {
+    const confirmed = confirm(`Delete ${person.name} ?`)
+    if (confirmed) {
+      services.remove(person.id)
+      setPersons(prev => prev.filter((p) => p.id !== person.id))
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -62,7 +70,7 @@ const App = () => {
         handleNumChange={handleNumChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} searchTerm={searchTerm} />
+      <Persons persons={persons} searchTerm={searchTerm} handleDelete={handleDelete} />
     </div>
   );
 };
