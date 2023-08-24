@@ -1,11 +1,15 @@
-const Persons = ({ filteredData }) => {
+const Persons = ({ persons, searchTerm }) => {
   return (
     <>
-      {filteredData.map((person) => (
-        <p key={person.name}>
-          {person.name} {person.number}
-        </p>
-      ))}
+      {persons
+        .filter((person) =>
+          person.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((person) => (
+          <p key={person.name}>
+            {person.name} {person.number}
+          </p>
+        ))}
     </>
   );
 };
