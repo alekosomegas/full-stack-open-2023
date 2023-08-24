@@ -9,14 +9,12 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     axios
       .get("http://localhost:3001/persons")
       .then((result) => {
         setPersons(result.data)
-        setFilteredData(result.data)
       })
       .catch((err) => {});
   }, []);
@@ -35,21 +33,26 @@ const App = () => {
       alert(newName + " is already added to the phonebook");
       return;
     }
-    setPersons((prev) => {
-      setFilteredData([...prev, { name: newName, number: newNumber }]);
-      return [...prev, { name: newName, number: newNumber }];
-    });
+    const lastId = persons.reduce((maxId, person) => Math.max(maxId, person.id), 0)
+    const newPerson = { name: newName, number: newNumber, id: lastId + 1 }
+    
+    const url = 'http://localhost:3001/persons'
+    axios.post(url, newPerson)
+    .then(response => {
+      console.log(response);
+      setPersons((prev) => {
+        return [...prev, newPerson];
+      });
+    })
+
     setNewName("");
     setNewNumber("");
     setSearchTerm("");
   };
 
   const handleSearch = (event) => {
-    const term = event.target.value.toLowerCase();
+    const term = event.target.value;
     setSearchTerm(term);
-    setFilteredData(
-      persons.filter((person) => person.name.toLowerCase().includes(term))
-    );
   };
 
   return (
@@ -65,7 +68,7 @@ const App = () => {
         handleNumChange={handleNumChange}
       />
       <h2>Numbers</h2>
-      <Persons filteredData={filteredData} />
+      <Persons persons={persons} searchTerm={searchTerm} />
     </div>
   );
 };
