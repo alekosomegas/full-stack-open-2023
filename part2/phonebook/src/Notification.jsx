@@ -1,7 +1,7 @@
-const Notification = ({ text }) => {
+const Notification = ({ text, error }) => {
     if (!text) return
     return (
-        <div className="message">
+        <div className={`message ${error && "error"}`}>
             {text}
         </div>
     )
