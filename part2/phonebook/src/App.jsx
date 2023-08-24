@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import services from "./services";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
@@ -11,10 +11,9 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
+    services.getAll()
       .then((result) => {
-        setPersons(result.data)
+        setPersons(result)
       })
       .catch((err) => {});
   }, []);
@@ -35,15 +34,10 @@ const App = () => {
     }
     const lastId = persons.reduce((maxId, person) => Math.max(maxId, person.id), 0)
     const newPerson = { name: newName, number: newNumber, id: lastId + 1 }
-    
-    const url = 'http://localhost:3001/persons'
-    axios.post(url, newPerson)
-    .then(response => {
-      console.log(response);
-      setPersons((prev) => {
-        return [...prev, newPerson];
-      });
-    })
+    services.create(newPerson)    
+    setPersons((prev) => {
+      return [...prev, newPerson];
+    });
 
     setNewName("");
     setNewNumber("");
