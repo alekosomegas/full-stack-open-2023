@@ -33,6 +33,10 @@ function App() {
     );
   };
 
+  const onShowClicked = (country) => {
+    setSearchResults([country])
+  }
+
   return (
     <>
       <div>
@@ -45,7 +49,10 @@ function App() {
             <Country country={searchResults[0]} />
           ) : (
             searchResults.map((country) => (
-              <p key={country.name.official}>{country.name.common}</p>
+              <div key={country.name.official}>
+              <label>{country.name.common}</label> {""}
+              <button onClick={() => onShowClicked(country)}>show</button>
+              </div>
             ))
           )
         ) : (
