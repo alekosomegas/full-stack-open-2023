@@ -28,16 +28,25 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (newName === "") return;
-    if (persons.find((person) => person.name === newName)) {
-      alert(newName + " is already added to the phonebook");
-      return;
+    const duplicatePerson = persons.find((person) => person.name === newName)
+    if (duplicatePerson) {
+      const confirmed = confirm(newName + " is already added to the phonebook, replace the old number with the new one?");
+      if (confirmed) {
+        const newPerson = {...duplicatePerson, number: newNumber}
+        services.update(duplicatePerson.id, newPerson);
+        setPersons(prev => {
+          return prev.map(p => p.id !== newPerson.id ? p : newPerson)
+        })
+      } else return
+
+    } else {
+      const lastId = persons.reduce((maxId, person) => Math.max(maxId, person.id), 0)
+      const newPerson = { name: newName, number: newNumber, id: lastId + 1 }
+      services.create(newPerson)    
+      setPersons((prev) => {
+        return [...prev, newPerson];
+      });
     }
-    const lastId = persons.reduce((maxId, person) => Math.max(maxId, person.id), 0)
-    const newPerson = { name: newName, number: newNumber, id: lastId + 1 }
-    services.create(newPerson)    
-    setPersons((prev) => {
-      return [...prev, newPerson];
-    });
 
     setNewName("");
     setNewNumber("");
