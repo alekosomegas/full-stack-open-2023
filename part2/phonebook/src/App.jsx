@@ -51,12 +51,22 @@ const App = () => {
         0
       );
       const newPerson = { name: newName, number: newNumber, id: lastId + 1 };
-      services.create(newPerson);
-      setPersons((prev) => {
-        return [...prev, newPerson];
-      });
-      setMessage(`Added ${newPerson.name}`);
+      services.create(newPerson)
+      .then(createdPerson => {
+        setPersons((prev) => {
+          return [...prev, newPerson];
+        });
+        setMessage(`Added ${newPerson.name}`);
+      })
+      .catch(error => {
+        console.log(error);
+        setMessage(error.response.data.message)
+        setError(true)
+      })
+
+
       setTimeout(() => {
+        setError(false)
         setMessage(null);
       }, 5000);
     }
