@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const blogSchema = new mongoose.Schema({
   title: String,
+  author: String,
   url: {
     type: String,
     required: true
@@ -10,10 +11,9 @@ const blogSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  author: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
   }
 })
 

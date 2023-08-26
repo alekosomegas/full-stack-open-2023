@@ -8,6 +8,7 @@ const initialBlogs = [
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7,
+    user: "64ea224aef9adb984248bb86",
     __v: 0,
   },
   {
