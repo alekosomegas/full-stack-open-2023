@@ -1,7 +1,7 @@
 const listHelper = require('../utils/list_helper')
 
-describe('total likes', () => {
-    const listWithOneBlog = [
+const testBlogs = {
+    listWithOneBlog: [
         {
           _id: '5a422aa71b54a676234d17f8',
           title: 'Go To Statement Considered Harmful',
@@ -10,9 +10,9 @@ describe('total likes', () => {
           likes: 5,
           __v: 0
         }
-      ]
+      ] ,
 
-      const blogs = [
+      blogs: [
         {
           _id: "5a422a851b54a676234d17f7",
           title: "React patterns",
@@ -62,13 +62,27 @@ describe('total likes', () => {
           __v: 0
         }  
       ]
+    
+}
 
+describe('total likes', () => {
       test('when list has only one blog, equals the likes of that', () => {
-        const result = listHelper.totalLikes(listWithOneBlog)
-        expect(result).toBe(listWithOneBlog[0].likes)
+        const result = listHelper.totalLikes(testBlogs.listWithOneBlog)
+        expect(result).toBe(testBlogs.listWithOneBlog[0].likes)
       })
 
       test('when list has multiply blogs, equals the total of likes for each', () => {
-        expect(listHelper.totalLikes(blogs)).toBe(36)
+        expect(listHelper.totalLikes(testBlogs.blogs)).toBe(36)
+      })
+})
+
+describe('favorite blog', () => {
+    test('when list has only one blog, equals to that', () => {
+        const result = listHelper.favoriteBlog(testBlogs.listWithOneBlog)
+        expect(result).toEqual({
+            title: testBlogs.listWithOneBlog[0].title,
+            author: testBlogs.listWithOneBlog[0].author,
+            likes: testBlogs.listWithOneBlog[0].likes
+        })
       })
 })
