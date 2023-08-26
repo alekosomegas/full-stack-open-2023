@@ -50,7 +50,34 @@ describe("when there is initially some notes saved", () => {
         return helper.checkBlogsAreTheSame(newBlog, blog)
       }))).toHaveLength(1)
 
-  }, 100000);
+  }, 100000)
+
+  test('missing like property defaults to 0', async () => {
+    const newBlog = {
+        title: "Go To Statement Considered Harmful",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+      }
+
+      await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+  
+      const blogsInDb = await helper.blogsInDb()
+      const savedBlog = blogsInDb.find(blog =>{
+        return  blog.title === newBlog.title && 
+                blog.author === newBlog.author &&
+                blog.url === newBlog.url
+      })
+
+      expect(savedBlog.likes).toBe(0)
+
+  }, 100000)
+
+
+
 });
 
 afterAll(async () => {
