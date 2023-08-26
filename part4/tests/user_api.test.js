@@ -35,4 +35,27 @@ describe('when there is one user', () => {
         const usernames = usersAtEnd.map(user => user.username)
         expect(usernames).toContain(newUser.username)
     }, 100000)
+
+    test('attempt to create user without a password', async () => {
+        const newUser = {
+            username: 'bad',
+            name: 'bad'
+        }
+
+        await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+    })
+    test('attempt to create user without a valid password', async () => {
+        const newUser = {
+            username: 'bad',
+            name: 'bad',
+            password: 'bad'
+        }
+
+        await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+    })
+
 })
