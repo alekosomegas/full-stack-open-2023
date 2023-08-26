@@ -85,4 +85,30 @@ describe('favorite blog', () => {
             likes: testBlogs.listWithOneBlog[0].likes
         })
       })
+      test('when list has multiple blogs', () => {
+        const result = listHelper.favoriteBlog(testBlogs.blogs)
+        expect(result).toEqual({
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            likes: 12
+        })
+      })
+})
+
+describe('most prolific author', () => {
+    test('when list has only one blog, equals to that', () => {
+        const result = listHelper.mostBlogs(testBlogs.listWithOneBlog)
+        expect(result).toEqual({
+            author: testBlogs.listWithOneBlog[0].author,
+            blogs: 1
+        })
+      })
+
+      test('when list has multiple blogs', () => {
+        const result = listHelper.mostBlogs(testBlogs.blogs)
+        expect(result).toEqual({
+            author: "Robert C. Martin",
+            blogs: 3
+        })
+      })
 })
