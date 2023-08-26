@@ -42,51 +42,61 @@ describe("when there is initially some notes saved", () => {
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
-      
-      const blogsInDb = await helper.blogsInDb()
-      expect(blogsInDb).toHaveLength(helper.initialBlogs.length +1)
-    
-      expect((blogsInDb.filter(blog => {
-        return helper.checkBlogsAreTheSame(newBlog, blog)
-      }))).toHaveLength(1)
 
-  }, 100000)
+    const blogsInDb = await helper.blogsInDb();
+    expect(blogsInDb).toHaveLength(helper.initialBlogs.length + 1);
 
-  test('missing like property defaults to 0', async () => {
+    expect(
+      blogsInDb.filter((blog) => {
+        return helper.checkBlogsAreTheSame(newBlog, blog);
+      })
+    ).toHaveLength(1);
+  }, 100000);
+
+  test("missing like property defaults to 0", async () => {
     const newBlog = {
-        title: "Go To Statement Considered Harmful",
-        author: "Edsger W. Dijkstra",
-        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-      }
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    };
 
-      await api
+    await api
       .post("/api/blogs")
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
-  
-      const blogsInDb = await helper.blogsInDb()
-      const savedBlog = blogsInDb.find(blog =>{
-        return  blog.title === newBlog.title && 
-                blog.author === newBlog.author &&
-                blog.url === newBlog.url
-      })
 
-      expect(savedBlog.likes).toBe(0)
+    const blogsInDb = await helper.blogsInDb();
+    const savedBlog = blogsInDb.find((blog) => {
+      return (
+        blog.title === newBlog.title &&
+        blog.author === newBlog.author &&
+        blog.url === newBlog.url
+      );
+    });
 
-  }, 100000)
+    expect(savedBlog.likes).toBe(0);
+  }, 100000);
 
-  test('missing url gives status 400', async () => {
+  test("missing url gives status 400", async () => {
     const newBlog = {
-        title: "Go To Statement Considered Harmful",
-        author: "Edsger W. Dijkstra",
-      }
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+    };
 
-      const response = await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(400)
-  })
+    const response = await api.post("/api/blogs").send(newBlog).expect(400);
+  });
+
+  test("delete a blog", async () => {
+    const blogsInDb = await helper.blogsInDb();
+    const blogToDelete = blogsInDb[0];
+    await api.delete(`/api/blogs/${blogToDelete.id}`);
+    expect(204);
+
+    const blogsInDbAfter = await helper.blogsInDb()
+    expect(blogsInDbAfter).toHaveLength(blogsInDb.length -1)
+
+  });
 
 });
 
