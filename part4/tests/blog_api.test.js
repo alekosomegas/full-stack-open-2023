@@ -23,6 +23,11 @@ describe('when there is initially some notes saved', () => {
         const response = await api.get('/api/blogs')
         expect(response.body).toHaveLength(helper.initialBlogs.length)
     }, 100000)
+
+    test('blog post has id property', async () => {
+        const response = await api.get('/api/blogs')
+        response.body.map(blog => expect(blog.id).toBeDefined)
+    }, 100000)
 })
 
 
