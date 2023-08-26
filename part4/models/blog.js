@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 
 const blogSchema = new mongoose.Schema({
   title: String,
-  author: String,
   url: {
     type: String,
     required: true
@@ -10,8 +9,15 @@ const blogSchema = new mongoose.Schema({
   likes: {
     type: Number,
     default: 0
+  },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 })
+
+// virtual author name
 
 blogSchema.set('toJSON', {
     transform: (document, returnedObject) => {
