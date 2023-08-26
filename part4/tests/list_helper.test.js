@@ -112,3 +112,21 @@ describe('most prolific author', () => {
         })
       })
 })
+
+describe('most liked author', () => {
+    test('when list has only one blog, equals to that', () => {
+        const result = listHelper.mostLikes(testBlogs.listWithOneBlog)
+        expect(result).toEqual({
+            author: testBlogs.listWithOneBlog[0].author,
+            likes: testBlogs.listWithOneBlog[0].likes
+        })
+      })
+
+      test('when list has multiple blogs', () => {
+        const result = listHelper.mostLikes(testBlogs.blogs)
+        expect(result).toEqual({
+            author: "Edsger W. Dijkstra",
+            likes: 17
+        })
+      })
+})
