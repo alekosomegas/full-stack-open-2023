@@ -76,7 +76,17 @@ describe("when there is initially some notes saved", () => {
 
   }, 100000)
 
+  test('missing url gives status 400', async () => {
+    const newBlog = {
+        title: "Go To Statement Considered Harmful",
+        author: "Edsger W. Dijkstra",
+      }
 
+      const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 
 });
 
