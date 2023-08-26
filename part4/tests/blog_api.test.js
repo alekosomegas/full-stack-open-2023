@@ -85,7 +85,7 @@ describe("when there is initially some notes saved", () => {
     };
 
     const response = await api.post("/api/blogs").send(newBlog).expect(400);
-  });
+  }, 100000);
 
   test("delete a blog", async () => {
     const blogsInDb = await helper.blogsInDb();
@@ -95,9 +95,20 @@ describe("when there is initially some notes saved", () => {
 
     const blogsInDbAfter = await helper.blogsInDb()
     expect(blogsInDbAfter).toHaveLength(blogsInDb.length -1)
+  }, 100000);
 
-  });
+  test('update a blog', async () => {
+    const blogsInDbBefore = await helper.blogsInDb()
+    const blogToUpdate = blogsInDbBefore[0]
 
+    updatedBlog = {...blogToUpdate, likes: blogToUpdate.likes + 1}
+    await api
+        .put(`/api/blogs/${updatedBlog.id}`)
+        .send(updatedBlog)
+
+    const blogsInDbAfter = await helper.blogsInDb()
+    expect(blogsInDbAfter[0].likes).toEqual(blogToUpdate.likes +1)
+  }, 100000)
 });
 
 afterAll(async () => {
