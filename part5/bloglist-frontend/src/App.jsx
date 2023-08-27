@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import Notification from './components/Notification'
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [message, setMessage] = useState({ text: '', error: false})
@@ -12,11 +13,9 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    author: "",
-    url: "",
-  });
+  const blogFormRef = useRef()
+
+  const [createBlogFormVisible, setCreateBlogFormVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -59,10 +58,9 @@ const App = () => {
     localStorage.removeItem("user");
   };
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
-
-    const response = await blogService.create(newBlog, user)
+  const createBlog = async (newBlog) => {
+    blogFormRef.current.toggleVisibility()
+    const response = await blogService.create(newBlog)
     setBlogs(prev => prev.concat(response))
     setMessage({text: `a new blog: ${response.title} by ${response.author} added`, error: false})
     setTimeout(() => {
@@ -74,13 +72,15 @@ const App = () => {
     <div>
       <Notification message={message} setMessage={setMessage}/>
       {user === null ? (
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-        />
+        <Togglable buttonLabel='login'>
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+          />
+        </Togglable>
       ) : (
         <div>
           <h2>blogs</h2>
@@ -88,12 +88,9 @@ const App = () => {
             {`${user.name} logged in`}
             <button onClick={handleLogout}>Log out</button>
           </p>
-
-          <BlogForm
-            handleNewBlog={handleNewBlog}
-            newBlog={newBlog}
-            setNewBlog={setNewBlog}
-          />
+          <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+            <BlogForm createBlog={createBlog}/>
+          </Togglable>
 
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
