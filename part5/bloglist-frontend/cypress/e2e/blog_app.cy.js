@@ -34,12 +34,20 @@ describe("Blog app", function () {
       cy.contains('test titke')
     })
 
-    it.only('user can like a block', function() {
+    it('user can like a block', function() {
       cy.createBlog({title: "test title", author: "test Author"})
       cy.get('#showExtraBtn').click().then(() => {
         cy.get('#likeBtn').click().then(() => {
           cy.get('#likes').contains('1')
         })
+      })
+    })
+
+    it.only('the user who created a blog can delete it', function() {
+      cy.createBlog({title: "test title", author: "test Author"})
+      cy.get('#showExtraBtn').click().then(() => {
+        cy.get('#removeBtn').click()
+        cy.contains('test title').should('not.exist')
       })
     })
   })

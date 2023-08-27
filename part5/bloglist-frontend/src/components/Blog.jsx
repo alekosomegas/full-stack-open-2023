@@ -45,7 +45,7 @@ const Blog = ({ blog, setBlogs, username }) => {
         <p>likes<span id="likes">{blog.likes}</span> <button id="likeBtn" onClick={handleLikeClicked}>like</button></p>
         <p>{blog.user?.name}</p>
         { blog.user?.username === username &&
-          <button onClick={handleRemoveClicked}>remove</button>
+          <button id="removeBtn" onClick={handleRemoveClicked}>remove</button>
         }
       </div>
 
