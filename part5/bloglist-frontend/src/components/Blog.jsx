@@ -38,11 +38,11 @@ const Blog = ({ blog, setBlogs, username }) => {
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
-      <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'view'}</button>
+      <button id="showExtraBtn" onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'view'}</button>
 
       <div id='extraInfo' style={{display: showDetails ? '' : 'none'}}>
         <p>{blog.url}</p>
-        <p>likes {blog.likes} <button onClick={handleLikeClicked}>like</button></p>
+        <p>likes<span id="likes">{blog.likes}</span> <button id="likeBtn" onClick={handleLikeClicked}>like</button></p>
         <p>{blog.user?.name}</p>
         { blog.user?.username === username &&
           <button onClick={handleRemoveClicked}>remove</button>

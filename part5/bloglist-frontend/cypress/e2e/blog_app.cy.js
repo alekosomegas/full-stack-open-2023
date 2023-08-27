@@ -29,9 +29,18 @@ describe("Blog app", function () {
       cy.login({ username: 'test', password: 'test' })
     })
   
-    it.only('A blog can be created', function() {
+    it('A blog can be created', function() {
       cy.createBlog({title: "test titke", author: "test Author"})
       cy.contains('test titke')
+    })
+
+    it.only('user can like a block', function() {
+      cy.createBlog({title: "test title", author: "test Author"})
+      cy.get('#showExtraBtn').click().then(() => {
+        cy.get('#likeBtn').click().then(() => {
+          cy.get('#likes').contains('1')
+        })
+      })
     })
   })
 
