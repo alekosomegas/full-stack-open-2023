@@ -40,7 +40,7 @@ const Blog = ({ blog, setBlogs, username }) => {
       {blog.title} {blog.author}
       <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'view'}</button>
 
-      <div style={{display: showDetails ? '' : 'none'}}>
+      <div id='extraInfo' style={{display: showDetails ? '' : 'none'}}>
         <p>{blog.url}</p>
         <p>likes {blog.likes} <button onClick={handleLikeClicked}>like</button></p>
         <p>{blog.user?.name}</p>
