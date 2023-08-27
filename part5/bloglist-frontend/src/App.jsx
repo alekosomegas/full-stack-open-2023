@@ -94,7 +94,7 @@ const App = () => {
           </Togglable>
 
           {blogs.sort((a,b) => {return b.likes - a.likes}).map((blog) => (
-            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
+            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} username={user?.username} />
           ))}
         </div>
       )}
