@@ -43,7 +43,7 @@ describe("Blog app", function () {
       })
     })
 
-    it.only('the user who created a blog can delete it', function() {
+    it('the user who created a blog can delete it', function() {
       cy.createBlog({title: "test title", author: "test Author"})
       cy.get('#showExtraBtn').click().then(() => {
         cy.get('#removeBtn').click()
@@ -52,6 +52,28 @@ describe("Blog app", function () {
     })
   })
 
+  describe('multiple users', function() {
+
+    it.only('only the creator can see the delete button of a blog', function() {
+      const user = {
+        name: "test2",
+        username: "test2",
+        password: "test2",
+      };
+      cy.request("POST", "http://localhost:3003/api/users/", user);
+      // log in as test 1 create a blog ans get delete btn
+      cy.login({ username: 'test', password: 'test' })
+      cy.createBlog({title: "test title", author: "test Author"})
+      cy.get('#showExtraBtn').click()
+      cy.get('#removeBtn')
+
+      cy.login({ username: 'test2', password: 'test2' })
+      cy.get('#showExtraBtn').click()
+      cy.get('#removeBtn').should('not.exist')
+
+
+    })
+  })
 })
 
 
