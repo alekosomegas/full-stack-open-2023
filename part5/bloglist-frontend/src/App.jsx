@@ -71,6 +71,7 @@ const App = () => {
 
   return (
     <div>
+      <h2>blogs</h2>
       <Notification message={message} setMessage={setMessage}/>
       {user === null ? (
         <Togglable buttonLabel='login'>
@@ -84,7 +85,6 @@ const App = () => {
         </Togglable>
       ) : (
         <div>
-          <h2>blogs</h2>
           <p>
             {`${user.name} logged in`}
             <button onClick={handleLogout}>Log out</button>
