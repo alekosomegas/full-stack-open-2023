@@ -22,19 +22,20 @@ describe("Blog app", function () {
       cy.contains('login')
     })
   })
+
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'test', password: 'test' })
+    })
+  
+    it.only('A blog can be created', function() {
+      cy.createBlog({title: "test titke", author: "test Author"})
+      cy.contains('test titke')
+    })
+  })
+
 })
 
 
 
-
-// describe('when logged in', function() {
-//   beforeEach(function() {
-//     cy.createTestUser()
-//     cy.login({ username: 'test', password: 'test' })
-//   })
-
-//   it('a new note can be created', function() {
-//     // ...
-//   })
-
-// })

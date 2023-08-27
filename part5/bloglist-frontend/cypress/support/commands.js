@@ -44,3 +44,15 @@ Cypress.Commands.add("createTestUser", () => {
   cy.request("POST", "http://localhost:3003/api/users/", user);
   cy.visit("http://localhost:5173");
 });
+
+Cypress.Commands.add('createBlog', (blog) => {
+    cy.request({
+        url: 'http://localhost:3003/api/blogs',
+        method: 'POST',
+        body: { ...blog },
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
+          }
+    })
+    cy.visit('http://localhost:5173')
+})
