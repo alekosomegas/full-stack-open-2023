@@ -31,7 +31,7 @@ Cypress.Commands.add("login", ({ username, password }) => {
   }).then(({ body }) => {
     localStorage.setItem("user", JSON.stringify(body));
     cy.visit("http://localhost:5173");
-  });
+  })
 });
 
 Cypress.Commands.add("createTestUser", () => {
