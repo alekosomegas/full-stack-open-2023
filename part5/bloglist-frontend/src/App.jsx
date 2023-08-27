@@ -93,9 +93,12 @@ const App = () => {
             <BlogForm createBlog={createBlog}/>
           </Togglable>
 
+        <div id="blogsContainer">
+
           {blogs.sort((a,b) => {return b.likes - a.likes}).map((blog) => (
             <Blog key={blog.id} blog={blog} setBlogs={setBlogs} username={user?.username} />
           ))}
+          </div>
         </div>
       )}
     </div>
