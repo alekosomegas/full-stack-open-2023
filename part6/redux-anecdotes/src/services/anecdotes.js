@@ -8,7 +8,7 @@ const getAll = async () => {
 }
 const addToDb = async (anecdote) => {
     const response = await axios.post(baseUrl, anecdote)
-    return response
+    return response.data
 }
 
 export default { getAll, addToDb }
