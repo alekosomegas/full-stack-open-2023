@@ -18,6 +18,10 @@ const AnecdoteForm = () => {
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
+    if (content.length < 5) {
+      dispatch({ type: 'ERROR', payload: 'too short anecdote, must have length 5 or more'})
+      return
+    }
     event.target.anecdote.value = ''
     console.log('new anecdote')
     newAnecdoteMutation.mutate({ content, id: getId(), votes: 0 })
