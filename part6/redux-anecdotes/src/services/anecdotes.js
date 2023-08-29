@@ -11,4 +11,7 @@ const addToDb = async (anecdote) => {
     return response.data
 }
 
-export default { getAll, addToDb }
+const updateVote = async (anecdote) => {
+    const response = await axios.put(`${baseUrl}/${anecdote.id}`, {...anecdote, vote: anecdote.votes + 1}, {new: true} )
+}
+export default { getAll, addToDb, updateVote }
