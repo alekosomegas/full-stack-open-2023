@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import  { useField } from './hooks'
+import { useField } from './hooks'
 import {
 	BrowserRouter as Router,
 	Routes,
 	Route,
 	Link,
 	useMatch,
-  useNavigate
+	useNavigate,
 } from 'react-router-dom'
 
 const Menu = (props) => {
@@ -75,22 +75,29 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const navigate = useNavigate()
+	const navigate = useNavigate()
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		props.addNew({
-			content,
-			author,
-			info,
+		const newAnecdote = {
+			content: content.value,
+			author: author,
+			info: info,
 			votes: 0,
-		})
-    navigate('/')
+		}
+		props.addNew(newAnecdote)
+		navigate('/')
 	}
 
 	const content = useField('text')
 	const author = useField('text')
 	const info = useField('text')
+
+	const handleReset = () => {
+		content.onReset()
+		author.onReset()
+		info.onReset()
+	}
 
 	return (
 		<div>
@@ -98,40 +105,32 @@ const CreateNew = (props) => {
 			<form onSubmit={handleSubmit}>
 				<div>
 					content
-					<input {...content}
-						name='content'
-					/>
+					<input {...content} name='content' />
 				</div>
 				<div>
 					author
-					<input
-						name='author'
-						{...author}
-					/>
+					<input name='author' {...author} />
 				</div>
 				<div>
 					url for more info
-					<input
-						{...info}
-						name='info'
-					/>
+					<input {...info} name='info' />
 				</div>
 				<button>create</button>
+				<button type='button' onClick={handleReset}>reset</button>
 			</form>
 		</div>
 	)
 }
 
 const Anecdote = ({ anecdote }) => {
-  console.log(anecdote);
-  return (
-    <div>
-      <p>{anecdote?.content}</p>
-      <span>{anecdote?.author}</span>
-      <span>{anecdote?.info}</span>
-      <span>Votes: {anecdote?.votes}</span>
-    </div>
-  )
+	return (
+		<div>
+			<p>{anecdote?.content}</p>
+			<span>{anecdote?.author}</span>
+			<span>{anecdote?.info}</span>
+			<span>Votes: {anecdote?.votes}</span>
+		</div>
+	)
 }
 
 const App = () => {
@@ -155,11 +154,9 @@ const App = () => {
 	const [notification, setNotification] = useState('')
 
 	const match = useMatch('/anecdotes/:id')
-  console.log(match);
 	const anecdote = match
 		? anecdotes.find((a) => a.id === Number(match.params.id))
 		: null
-  console.log(anecdote);
 
 	const addNew = (anecdote) => {
 		anecdote.id = Math.round(Math.random() * 10000)
