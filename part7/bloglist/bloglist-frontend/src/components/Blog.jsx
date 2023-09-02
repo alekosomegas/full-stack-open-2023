@@ -1,9 +1,15 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
+import { useDispatch } from "react-redux"
+import { likeBlog, deleteBlog } from "../reducers/blogReducer"
+import { useSelector } from "react-redux"
 
-const Blog = ({ blog, setBlogs, username }) => {
+const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false)
+  const user = useSelector(state => state.user)
 
+  const dispatch = useDispatch()
+  
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,25 +19,13 @@ const Blog = ({ blog, setBlogs, username }) => {
   }
 
   const handleLikeClicked = async () => {
-    const newBlog = {...blog, likes: blog.likes + 1, id: undefined, user: blog.user?.id}
-    await blogService.update(newBlog, blog.id)
-    setBlogs(prev => {
-      prev[prev.indexOf(blog)] = {...blog, likes: blog.likes +1}
-      return [
-        ...prev
-      ]
-    })
+    dispatch(likeBlog(blog))
   }
 
   const handleRemoveClicked = async () => {
     const confirmation = confirm(`Remove blog ${blog.title} by ${blog.author}?`)
     if (confirmation) {
-      try {
-        await blogService.remove(blog.id)
-        setBlogs(prev => prev.filter(b => b !== blog))
-      } catch (error) {
-        console.log(error);
-      }
+      dispatch(deleteBlog(blog))
     }
   }
 
@@ -44,7 +38,7 @@ const Blog = ({ blog, setBlogs, username }) => {
         <p>{blog.url}</p>
         <p>likes<span id="likes">{blog.likes}</span> <button id="likeBtn" onClick={handleLikeClicked}>like</button></p>
         <p>{blog.user?.name}</p>
-        { blog.user?.username === username &&
+        { blog.user?.username === user.username &&
           <button id="removeBtn" onClick={handleRemoveClicked}>remove</button>
         }
       </div>

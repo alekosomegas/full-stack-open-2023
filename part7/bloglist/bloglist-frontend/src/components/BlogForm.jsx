@@ -1,76 +1,57 @@
-import { useState } from "react";
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
+import { useField } from '../hooks/useField'
 
-const BlogForm = ({ createBlog }) => {
-    const [newBlog, setNewBlog] = useState({
-        title: "",
-        author: "",
-        url: "",
-      });
+const BlogForm = () => {
+	const dispatch = useDispatch()
 
-    const addBlog = (event) => {
-        event.preventDefault();
-        createBlog(newBlog)
-        setNewBlog({
-            title: "",
-            author: "",
-            url: "",
-          })
-    }
+	const handleSubmit = (event) => {
+		event.preventDefault()
+		const newBlog = {
+			title: title.value,
+			author: author.value,
+			url: url.value,
+			likes: 0,
+		}
+		dispatch(createBlog(newBlog))
+		dispatch(
+			setNotification(
+				`a new blog: ${newBlog.title} by ${newBlog.author} added`,
+				5
+			)
+		)
+		handleReset()
+	}
 
-  return (
-    <form onSubmit={addBlog}>
-      <h1>create new</h1>
-      <div>
-        title:
-        <input
-          type="text"
-          value={newBlog.title}
-          name="title"
-          onChange={({ target }) =>
-            setNewBlog((prev) => {
-              return {
-                ...prev,
-                title: target.value,
-              };
-            })
-          }
-        />
-      </div>
-      <div>
-        author
-        <input
-          type="text"
-          value={newBlog.author}
-          name="author"
-          onChange={({ target }) =>
-            setNewBlog((prev) => {
-              return {
-                ...prev,
-                author: target.value,
-              };
-            })
-          }
-        />
-      </div>
-      <div>
-        url
-        <input
-          type="text"
-          value={newBlog.url}
-          name="url"
-          onChange={({ target }) =>
-            setNewBlog((prev) => {
-              return {
-                ...prev,
-                url: target.value,
-              };
-            })
-          }
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>
-  );
-};
+	const title = useField('text')
+	const author = useField('text')
+	const url = useField('text')
 
-export default BlogForm;
+	const handleReset = () => {
+		title.onReset()
+		author.onReset()
+		url.onReset()
+	}
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<h1>create new</h1>
+			<div>
+				title:
+				<input name='title' {...title} />
+			</div>
+			<div>
+				author
+				<input name='author' {...author} />
+			</div>
+			<div>
+				url
+				<input type='text' {...url} />
+			</div>
+			<button type='submit'>create</button>
+		</form>
+	)
+}
+
+export default BlogForm
