@@ -8,7 +8,7 @@ import BlogList from './components/BlogList'
 import { initializeBlogs } from './reducers/blogReducer'
 import { logOut, getUser } from './reducers/userReducer'
 import { useSelector } from 'react-redux'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Link } from 'react-router-dom'
 import { UsersList } from './components/UsersList'
 import { initializeUsers } from './reducers/usersReducer'
 import User from './components/User'
@@ -32,6 +32,9 @@ const App = () => {
 
 	return (
 		<div>
+      <Link to={'/'}>Blogs</Link>
+      <Link to={'/users'}>Users</Link>
+
 			<h2>blogs</h2>
 			<Routes>
 				<Route
