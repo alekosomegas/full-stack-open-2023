@@ -18,7 +18,7 @@ const userReducer = createSlice({
 
 export const setUser = (user) => {
     return (dispatch) => {
-        blogService.setToken(user.token)
+        blogService.setToken(user?.token)
         dispatch(addUser(user))
     }
 }
