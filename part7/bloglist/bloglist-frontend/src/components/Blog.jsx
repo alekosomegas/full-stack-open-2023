@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { likeBlog, deleteBlog } from "../reducers/blogReducer"
 import { useSelector } from "react-redux"
-import SingleBlog from "./SingleBlog"
 import { Link } from "react-router-dom"
 
 const Blog = ({ blog }) => {
