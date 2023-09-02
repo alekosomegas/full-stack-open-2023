@@ -1,8 +1,9 @@
 import { useState } from "react"
-import blogService from '../services/blogs'
 import { useDispatch } from "react-redux"
 import { likeBlog, deleteBlog } from "../reducers/blogReducer"
 import { useSelector } from "react-redux"
+import SingleBlog from "./SingleBlog"
+import { Link } from "react-router-dom"
 
 const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false)
@@ -31,7 +32,7 @@ const Blog = ({ blog }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
+      <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
       <button id="showExtraBtn" onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'view'}</button>
 
       <div id='extraInfo' style={{display: showDetails ? '' : 'none'}}>

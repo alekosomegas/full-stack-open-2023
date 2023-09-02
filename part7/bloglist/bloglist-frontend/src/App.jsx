@@ -12,6 +12,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { UsersList } from './components/UsersList'
 import { initializeUsers } from './reducers/usersReducer'
 import User from './components/User'
+import SingleBlog from './components/SingleBlog'
 
 const App = () => {
 	const user = useSelector((state) => state.user)
@@ -58,6 +59,7 @@ const App = () => {
 				/>
 				<Route path='/users' element={<UsersList />} />
         <Route path='/users/:id' element={<User />} />
+        <Route path='blogs/:id' element={<SingleBlog />} />
 			</Routes>
 
 			<Notification />
