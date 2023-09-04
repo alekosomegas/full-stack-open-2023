@@ -102,6 +102,7 @@ const typeDefs = `
     name: String!
     id: ID!
     born: Int
+	bookCount: Int
   }
 
   type Book {
@@ -125,8 +126,19 @@ const typeDefs = `
 const resolvers = {
 	Query: {
 		authorsCount: () => authors.length,
+		allAuthors: () => authors,
+
 		bookCount: () => books.length,
 		allBooks: () => books,
+	},
+
+	Author: {
+		name: (root) => root.name,
+		bookCount: (root) => {
+			return books.reduce((acc, cur) => {
+				return cur.author === root.name ? acc +1: acc
+			}, 0)
+		}
 	},
 }
 
