@@ -1,5 +1,4 @@
 const AuthorsList = ({ authors }) => {
-    console.log(authors);
     return (
         <div>
             <h2>authors</h2>
