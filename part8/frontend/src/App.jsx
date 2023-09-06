@@ -42,7 +42,7 @@ const App = () => {
 			<Link to={'/books'}>books</Link>
 			<Link to={'/add-book'}>add book</Link>
 			<Routes>
-				<Route path='/' element={<AuthorsList authors={resultAuthors.data.allAuthors} />} />
+				<Route path='/' element={<AuthorsList authors={resultAuthors.data.allAuthors} ALL_AUTHORS={ALL_AUTHORS}/>} />
 				<Route path='/books' element={<BookList books={resultBooks.data.allBooks} />} />
 				<Route path='/add-book' element={<BookForm ALL_BOOKS={ALL_BOOKS}/>} />
 			</Routes>
