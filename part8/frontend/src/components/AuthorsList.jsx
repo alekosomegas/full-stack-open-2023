@@ -1,5 +1,6 @@
 import { useField } from "../hooks/useField"
 import { gql, useMutation } from '@apollo/client'
+import { useState } from "react"
 
 const EDIT_AUTHOR = gql`
 mutation editAuthor($name: String!, $setBornTo: Int!) {
@@ -14,7 +15,7 @@ mutation editAuthor($name: String!, $setBornTo: Int!) {
 `
 
 const AuthorsList = ({ authors, ALL_AUTHORS }) => {
-    const name = useField('text')
+    const [name, setName] = useState()
     const born = useField('number')
     
     const [ editAuthor ] = useMutation(EDIT_AUTHOR,  {
@@ -27,7 +28,7 @@ const AuthorsList = ({ authors, ALL_AUTHORS }) => {
     const handleUpdate = (e) => {
         e.preventDefault()
 
-        editAuthor({variables: {name: name.value, setBornTo: Number(born.value)}})
+        editAuthor({variables: {name: name, setBornTo: Number(born.value)}})
 
         name.onReset()
         born.onReset()
@@ -52,8 +53,11 @@ const AuthorsList = ({ authors, ALL_AUTHORS }) => {
             <h2>Set birthyear</h2>
             <form onSubmit={handleUpdate}>
                 <div>
-                    Name:
-                    <input {...name} />
+                    <select onChange={(e) => setName(e.target.value)} value={name}>
+                        <option></option>
+                        {authors.map(a => <option key={a.id} value={a.name}>{a.name}</option>)}
+                    </select>
+
                 </div>
                 <div>
                     born:
