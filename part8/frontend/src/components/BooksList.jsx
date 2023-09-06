@@ -1,4 +1,5 @@
 const BookList = ({ books }) => {
+
 	return (
 		<div>
 			<h2>books</h2>
@@ -16,7 +17,7 @@ const BookList = ({ books }) => {
 					{books.map((a) => (
 						<tr key={a.id}>
 							<th>{a.title}</th>
-							<th>{a.author}</th>
+							<th>{a.author.name}</th>
 							<th>{a.published}</th>
 						</tr>
 					))}

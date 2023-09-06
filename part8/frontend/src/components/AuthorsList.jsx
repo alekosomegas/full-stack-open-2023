@@ -30,7 +30,6 @@ const AuthorsList = ({ authors, ALL_AUTHORS }) => {
 
         editAuthor({variables: {name: name, setBornTo: Number(born.value)}})
 
-        name.onReset()
         born.onReset()
     }
 

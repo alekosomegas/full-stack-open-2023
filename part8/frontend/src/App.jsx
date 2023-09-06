@@ -21,7 +21,9 @@ query {
   allBooks {
     title
     published
-    author
+    author {
+      name
+    }
     genres
     id
   }
@@ -36,14 +38,15 @@ const App = () => {
     return <div>loading...</div>
   }
 
+
 	return (
 		<div>
 			<Link to={'/'}>authors</Link>
 			<Link to={'/books'}>books</Link>
 			<Link to={'/add-book'}>add book</Link>
 			<Routes>
-				<Route path='/' element={<AuthorsList authors={resultAuthors.data.allAuthors} ALL_AUTHORS={ALL_AUTHORS}/>} />
-				<Route path='/books' element={<BookList books={resultBooks.data.allBooks} />} />
+				<Route path='/' element={<AuthorsList authors={resultAuthors.data?.allAuthors} ALL_AUTHORS={ALL_AUTHORS}/>} />
+				<Route path='/books' element={<BookList books={resultBooks.data?.allBooks} />} />
 				<Route path='/add-book' element={<BookForm ALL_BOOKS={ALL_BOOKS}/>} />
 			</Routes>
 		</div>
