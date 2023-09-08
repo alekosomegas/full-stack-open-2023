@@ -7,3 +7,23 @@ export const LOGIN = gql`
     }
   }
 `
+
+export const ALL_GENRES = gql `
+    query {
+        allGenres 
+    }
+`
+
+export const ALL_BOOKS = gql`
+	query {
+		allBooks {
+			title
+			published
+			author {
+				name
+			}
+			genres
+			id
+		}
+	}
+`

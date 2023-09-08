@@ -5,6 +5,7 @@ import BookList from './components/BooksList'
 import { gql, useQuery, useApolloClient } from '@apollo/client'
 import BookForm from './components/BookForm'
 import LoginForm from './components/LoginForm'
+import { ALL_GENRES, ALL_BOOKS } from './queries'
 
 const ALL_AUTHORS = gql`
 	query {
@@ -17,23 +18,10 @@ const ALL_AUTHORS = gql`
 	}
 `
 
-const ALL_BOOKS = gql`
-	query {
-		allBooks {
-			title
-			published
-			author {
-				name
-			}
-			genres
-			id
-		}
-	}
-`
-
 const App = () => {
 	const resultAuthors = useQuery(ALL_AUTHORS)
 	const resultBooks = useQuery(ALL_BOOKS)
+  const resultGenres = useQuery(ALL_GENRES)
 	const [token, setToken] = useState(null)
 
 	const client = useApolloClient()
@@ -69,14 +57,14 @@ const App = () => {
 				/>
 				<Route
 					path='/books'
-					element={<BookList books={resultBooks.data?.allBooks} />}
+					element={<BookList books={resultBooks.data?.allBooks} allGenres={resultGenres.data?.allGenres}/>}
 				/>
 				{!token ? (
 					<Route path='login' element={<LoginForm setToken={setToken} />} />
 				) : (
 					<Route
 						path='/add-book'
-						element={<BookForm ALL_BOOKS={ALL_BOOKS} />}
+						element={<BookForm ALL_BOOKS={ALL_BOOKS}/>}
 					/>
 				)}
 			</Routes>

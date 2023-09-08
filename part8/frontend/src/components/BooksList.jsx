@@ -1,4 +1,18 @@
-const BookList = ({ books }) => {
+import { useState, useEffect } from "react"
+import { useQuery } from "@apollo/client"
+import { ALL_BOOKS } from "../queries"
+
+const BookList = ({ books, allGenres }) => {
+	const [genre, setGenre] = useState('all genres')
+	const [booksList, setBooksList] = useState(books)
+	allGenres = [...allGenres, 'all genres']
+	
+	const handleChangeGenreFilter = (e) => {
+		setGenre(e.target.id)
+		const byGenre = book => e.target.id === 'all genres' ? book : book.genres.includes(e.target.id)
+		setBooksList(books.filter(byGenre))
+	}
+
 
 	return (
 		<div>
@@ -14,7 +28,7 @@ const BookList = ({ books }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{books.map((a) => (
+					{booksList.map((a) => (
 						<tr key={a.id}>
 							<th>{a.title}</th>
 							<th>{a.author.name}</th>
@@ -23,6 +37,14 @@ const BookList = ({ books }) => {
 					))}
 				</tbody>
 			</table>
+			<div data-toggle="buttons">
+				{allGenres.map(g => (
+					<label key={g}>
+						<input type='radio' name='genres' id={g}  checked={genre === g} onChange={handleChangeGenreFilter} />
+						{g}
+					</label>
+				))}
+			</div>
 		</div>
 	)
 }

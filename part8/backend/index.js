@@ -58,6 +58,8 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book!]!
 
 	me: User
+
+	allGenres: [String!]!
   }
 
   type Mutation {
@@ -92,14 +94,25 @@ const resolvers = {
 			return authors
 		},
 
-		bookCount: async () => Book.collection.countDocuments(),
-		allBooks: async (root, args) => {
-			const byAuthor = book => args.author ? book.author.name === args.author : book
-			const byGenre  = book => args.genre ? book.genres.includes(args.genre) : book
+		allGenres: async () => {
+			const books = await Book.find({})
+			let allGenres = []
+			books.forEach(b => allGenres.push(...b.genres))
+			allGenres = allGenres.filter((book, i, arr) => arr.indexOf(book) === i)
+			return allGenres
+		},
 
-			const books = await Book.find({}).populate('author')
+		bookCount: async () => Book.collection.countDocuments(),
+
+		allBooks: async (root, args) => {
+			console.log('called', args);
+			const byAuthor = book => args.author ? book.author.name === args.author : book
+			const byGenre  = book => args.genre && args.genre != 'all genres' ? book.genres.includes(args.genre) : book
+			const books = (await Book.find({}).populate('author')).filter(byGenre)
 			return books
 		},
+
+
 		me: (root, args, context) => {
 			return context.currentUser
 		}
