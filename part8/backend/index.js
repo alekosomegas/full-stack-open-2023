@@ -7,6 +7,7 @@ const Book = require('./models/book')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const User = require('./models/user')
+const { GraphQLError } = require('graphql')
 
 mongoose.set('strictQuery', false)
 
@@ -76,9 +77,9 @@ const typeDefs = `
 		username: String!
 		favoriteGenre: String!
 	  ): User
+
 	  login(
 		username: String!
-		password: String!
 	  ): Token
   }
 `
@@ -141,10 +142,11 @@ const resolvers = {
 				})
 			  })
 		  },
+
 		  login: async (root, args) => {
 			const user = await User.findOne({ username: args.username })
 		
-			if ( !user || args.password !== 'secret' ) {
+			if ( !user ) {
 			  throw new GraphQLError('wrong credentials', {
 				extensions: {
 				  code: 'BAD_USER_INPUT'
