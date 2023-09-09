@@ -56,6 +56,7 @@ const typeDefs = `
 
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]!
+	allBooksByGenre(genre: String): [Book]!
 
 	me: User
 
@@ -104,11 +105,18 @@ const resolvers = {
 
 		bookCount: async () => Book.collection.countDocuments(),
 
-		allBooks: async (root, args) => {
-			console.log('called', args);
+		allBooks: async (root, args, contextValue) => {
 			const byAuthor = book => args.author ? book.author.name === args.author : book
 			const byGenre  = book => args.genre && args.genre != 'all genres' ? book.genres.includes(args.genre) : book
 			const books = (await Book.find({}).populate('author')).filter(byGenre)
+			return books
+		},
+
+		allBooksByGenre: async (root, args, contextValue) => {
+			console.log(args);
+			const byGenre  = book => args.genre && args.genre != 'all genres' ? book.genres.includes(args.genre) : book
+			const books = (await Book.find({}).populate('author')).filter(byGenre)
+			console.log(books);
 			return books
 		},
 
@@ -186,6 +194,9 @@ const resolvers = {
 			}, 0)
 		}
 	},
+	User: {
+		favoriteGenre: (root) => root.favoriteGenre[0]
+	}
 }
 
 const server = new ApolloServer({
@@ -203,9 +214,9 @@ startStandaloneServer(server, {
 		  )
 		  const currentUser = await User
 			.findById(decodedToken.id).populate('favoriteGenre')
-		  return { currentUser }
+			return { currentUser }
 		}
-	  },
+	},
 }).then(({ url }) => {
 	console.log(`Server ready at ${url}`)
 })
