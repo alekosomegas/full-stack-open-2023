@@ -2,21 +2,8 @@ import { useField } from '../hooks/useField'
 import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { Navigate, useNavigate } from 'react-router-dom'
+import { CREATE_BOOK } from '../queries'
 
-
-const CREATE_BOOK = gql`
-mutation addBook($title: String!, $published: Int!, $author: String!, $genres: [String!]!) {
-  addBook(
-    title: $title,
-    published: $published,
-    author: $author,
-    genres: $genres
-  ) {
-    title
-    published
-  }
-}
-`
 
 const BookForm = ({ ALL_BOOKS }) => {
 	const [genres, setGenres] = useState([])

@@ -9,6 +9,19 @@ const jwt = require('jsonwebtoken')
 const User = require('./models/user')
 const { GraphQLError } = require('graphql')
 
+const { expressMiddleware } = require('@apollo/server/express4')
+const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const express = require('express')
+const cors = require('cors')
+const http = require('http')
+
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
+
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 mongoose.set('strictQuery', false)
 
 const MONGODB_URI = process.env.MONGODB_URI
@@ -127,7 +140,17 @@ const resolvers = {
 	},
 
 	Mutation: {
-		addBook: async (root, args) => {
+		addBook: async (root, args, context) => {
+			const currentUser = context.currentUser
+
+			if (!currentUser) {
+			  throw new GraphQLError('not authenticated', {
+				extensions: {
+				  code: 'BAD_USER_INPUT',
+				}
+			  })
+			}
+
 			let author = await Author.find({name: args.author})
 			if (!author.length) {
 				author = new Author({name: args.author})
@@ -135,9 +158,29 @@ const resolvers = {
 			}
 
 			const book = new Book({...args, author: author._id })
-			await book.save()
+			try {
+				await book.save()
+
+			} catch (error) {
+				throw new GraphQLError('Saving user failed', {
+				  extensions: {
+					code: 'BAD_USER_INPUT',
+					invalidArgs: args.name,
+					error
+				  }
+				})
+			  }
+
+			  pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
 			return book
 		},
+		Subscription: {
+			bookAdded: {
+			  subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+			},
+		},
+
 
 		editAuthor: async (root, args) => {
 			const author = await Author.findOne({name: args.name})
@@ -204,19 +247,77 @@ const server = new ApolloServer({
 	resolvers,
 })
 
-startStandaloneServer(server, {
-	listen: { port: 4000 },
-	context: async ({ req, res }) => {
-		const auth = req ? req.headers.authorization : null
-		if (auth && auth.startsWith('Bearer ')) {
-		  const decodedToken = jwt.verify(
-			auth.substring(7), process.env.JWT_SECRET
-		  )
-		  const currentUser = await User
-			.findById(decodedToken.id).populate('favoriteGenre')
+
+
+const start = async () => {
+	const app = express()
+	const httpServer = http.createServer(app)
+  
+	const wsServer = new WebSocketServer({
+	  server: httpServer,
+	  path: '/',
+	})
+	
+	const schema = makeExecutableSchema({ typeDefs, resolvers })
+	const serverCleanup = useServer({ schema }, wsServer)
+  
+	const server = new ApolloServer({
+	  schema,
+	  plugins: [
+		ApolloServerPluginDrainHttpServer({ httpServer }),
+		{
+		  async serverWillStart() {
+			return {
+			  async drainServer() {
+				await serverCleanup.dispose();
+			  },
+			};
+		  },
+		},
+	  ],
+	})
+  
+	await server.start()
+  
+	app.use(
+	  '/',
+	  cors(),
+	  express.json(),
+	  expressMiddleware(server, {
+		context: async ({ req }) => {
+		  const auth = req ? req.headers.authorization : null
+		  if (auth && auth.startsWith('Bearer ')) {
+			const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
+			const currentUser = await User.findById(decodedToken.id).populate('favoriteGenre')
 			return { currentUser }
-		}
-	},
-}).then(({ url }) => {
-	console.log(`Server ready at ${url}`)
-})
+		  }
+		},
+	  }),
+	)
+  
+	const PORT = 4000
+  
+	httpServer.listen(PORT, () =>
+	  console.log(`Server is now running on http://localhost:${PORT}`)
+	)
+  }
+  
+  start()
+
+
+// startStandaloneServer(server, {
+// 	listen: { port: 4000 },
+// 	context: async ({ req, res }) => {
+// 		const auth = req ? req.headers.authorization : null
+// 		if (auth && auth.startsWith('Bearer ')) {
+// 		  const decodedToken = jwt.verify(
+// 			auth.substring(7), process.env.JWT_SECRET
+// 		  )
+// 		  const currentUser = await User
+// 			.findById(decodedToken.id).populate('favoriteGenre')
+// 			return { currentUser }
+// 		}
+// 	},
+// }).then(({ url }) => {
+// 	console.log(`Server ready at ${url}`)
+// })

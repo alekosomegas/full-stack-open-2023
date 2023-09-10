@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { Routes, Route, Navigate, Link } from 'react-router-dom'
 import AuthorsList from './components/AuthorsList'
 import BookList from './components/BooksList'
-import { gql, useQuery, useApolloClient } from '@apollo/client'
+import { gql, useQuery, useApolloClient, useMutation, useSubscription } from '@apollo/client'
 import BookForm from './components/BookForm'
 import LoginForm from './components/LoginForm'
 import { ALL_GENRES, ALL_BOOKS } from './queries'
+import { BOOK_ADDED } from './queries'
 
 const ALL_AUTHORS = gql`
 	query {
@@ -35,6 +36,12 @@ const App = () => {
 		localStorage.clear()
 		client.resetStore()
 	}
+
+	// useSubscription(BOOK_ADDED, {
+	// 	onData: ({ data }) => {
+	// 	  console.log(data)
+	// 	}
+	//   })
 
 	return (
 		<div>
