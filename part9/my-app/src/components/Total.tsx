@@ -1,6 +1,6 @@
 import { Courses } from "../types"
 
-const Total = ({courses}:Courses) => {
+const Total = ({courses}: Courses) => {
     return (
     <div>
        <p>

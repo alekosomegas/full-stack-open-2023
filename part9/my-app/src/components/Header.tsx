@@ -1,4 +1,3 @@
-import { JsxElement } from 'typescript'
 import { HeaderProps } from '../types'
 
 const Header = (props: HeaderProps): JSX.Element => {

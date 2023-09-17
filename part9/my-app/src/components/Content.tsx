@@ -1,11 +1,10 @@
-import { Courses } from "../types"
+import {PartProps, Courses} from "../types"
+import Part from "./Part"
 
-const Content = (props: Courses) => {
+const Content = ({courses}: Courses): JSX.Element => {
     return (
         <div>
-            {props.courses.map(c => 
-                <p key={c.name}>{c.name} {c.exerciseCount}</p>
-                )}
+            {courses.map(p => <Part key={p.name} part={p} />)}
         </div>
     )    
  }
