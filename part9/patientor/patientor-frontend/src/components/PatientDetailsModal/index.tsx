@@ -1,7 +1,9 @@
 import { Patient } from '../../types';
 import {useMatch} from 'react-router-dom'
 import patientService from '../../services/patients'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { Diagnosis } from '../../types';
+import { AffiliateContext } from '../../Wrapper';
 
 const PatientsDetailsModal = () => {
     const [patient, setPatient] = useState<Patient>()
@@ -10,7 +12,16 @@ const PatientsDetailsModal = () => {
     if (match?.params.id && !patient ) {
         patientService.getPatientById(match.params.id).then(p => setPatient(p))
     } 
-    
+
+    const diagnosisContext = useContext(AffiliateContext);
+
+    const getCode = (c: string) => {
+        if (diagnosisContext?.data) {
+            const code:Diagnosis | undefined = diagnosisContext.data.find(d => d.code === c)
+            return code;
+        }
+    }
+
     return (
         <div>
             <p>{patient?.name}</p>
@@ -22,8 +33,10 @@ const PatientsDetailsModal = () => {
                     <div>
                         <p>{e.date} {e.description}</p>
                         <ul>
-                        {e.diagnosisCodes?.map(d => 
-                            <li key={d}>{d}</li>
+                        {e.diagnosisCodes?.map(d => { 
+                            const code = getCode(d)
+                            return <li key={d}>{d} {code?.name}</li>
+                        }
                             )}
                         </ul>
                     </div>
