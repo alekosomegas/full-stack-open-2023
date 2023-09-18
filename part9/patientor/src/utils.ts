@@ -1,9 +1,9 @@
 import { NewPatientEntry } from '../types'
 
 export enum Gender {
-    male = 'male',
-    female = 'female',
-    other = 'other'
+    Male = 'male',
+    Female = 'female',
+    Other = 'other'
 }
 
 const isString = (text: unknown): text is string => {

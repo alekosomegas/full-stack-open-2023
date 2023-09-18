@@ -11,7 +11,7 @@ const getAll = async () => {
   return data;
 };
 
-const getPatientById = async (id: string) => {
+const getPatientById = async (id: string) => {  
   const { data } = await axios.get<Patient>(
     `${apiBaseUrl}/patients/${id}`
   )
