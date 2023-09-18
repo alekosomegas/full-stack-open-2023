@@ -4,6 +4,7 @@ import patientService from '../../services/patients'
 import { useState, useContext } from 'react';
 import { Diagnosis } from '../../types';
 import { AffiliateContext } from '../../Wrapper';
+import Entry from '../Entry';
 
 const PatientsDetailsModal = () => {
     const [patient, setPatient] = useState<Patient>()
@@ -29,6 +30,7 @@ const PatientsDetailsModal = () => {
             <p>{patient?.ssn}</p>
             <h3>Entries</h3>
             <p>{patient?.entries?.map(e => {
+                return <Entry entry={e}/>
                 return (
                     <div>
                         <p>{e.date} {e.description}</p>
