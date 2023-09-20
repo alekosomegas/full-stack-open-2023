@@ -1,6 +1,7 @@
 import express from 'express'
 import patientService from '../services/patientService'
-import { toNewPatientEntry } from '../utils'
+import { toAddNewPatientEntry, toNewPatientEntry } from '../utils'
+import { EntryWithoutId } from '../../types'
 
 const router = express.Router()
 
@@ -33,5 +34,26 @@ router.get('/:id', (req, res) => {
     }
 })
 
+router.post('/:id/entries', (req, res) => {
+  console.log("ping ", req.params.id);
+  
+    const patient = patientService.getPatientById(req.params.id)
+    if (!patient) {
+      res.sendStatus(500)
+    } else {
+
+      try {
+        const newEntry = toAddNewPatientEntry(req.body)
+        const addedEntry = patientService.addEntry(patient, newEntry)
+        res.json(addedEntry)
+    } catch (error: unknown) {
+        let errorMessage = 'Something went wrong.';
+        if (error instanceof Error) {
+          errorMessage += ' Error: ' + error.message;
+        }
+        res.status(400).send(errorMessage);
+      }
+    }         
+})
 
 export default router

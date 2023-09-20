@@ -73,4 +73,4 @@ const EntryDisplay = ({ entry }: EntryProps) => {
     )
 }
 
-export default EntryDisplay
+export default EntryDisplay 
