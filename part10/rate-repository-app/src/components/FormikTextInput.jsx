@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View, Dimensions } from 'react-native';
 import { useField } from 'formik';
 
 import Text from './Text';
@@ -7,6 +7,8 @@ import theme from '../theme';
 const styles = StyleSheet.create({
   errorText: {
     marginTop: 5,
+    color: theme.colors.error,
+    paddingLeft: 10
   },
   input: {
     backgroundColor: '#fff',
@@ -15,16 +17,14 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.secondary,
     borderWidth: 1,
     borderRadius: 5,
-    flexGrow: 1,
+    width: Dimensions.get('window').width*0.9
   },
   container: {
-    flexDirection: 'row',
     paddingHorizontal: 10
   }
 });
 
 const FormikTextInput = ({ name, ...props }) => {
-    console.log(name);
   const [field, meta, helpers] = useField(name);
   const showError = meta.touched && meta.error;
 
@@ -32,7 +32,7 @@ const FormikTextInput = ({ name, ...props }) => {
     <View style={styles.container}>
       <TextInput
         secureTextEntry={name === 'password'}
-        style={styles.input}
+        style={[styles.input, showError && {borderColor: theme.colors.error}]}
         onChangeText={value => helpers.setValue(value)}
         onBlur={() => helpers.setTouched(true)}
         value={field.value}

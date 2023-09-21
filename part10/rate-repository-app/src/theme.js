@@ -3,6 +3,7 @@ const theme = {
       primary: '#121212',
       secondary: '#636363',
       white: '#fff',
+      error: '#rgb(204, 57, 57)'
     },
     bgColors: {
         base: '#3c3c3c',
